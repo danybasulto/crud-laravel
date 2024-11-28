@@ -9,6 +9,11 @@
 </head>
 
 <body>
+    @if(session('Creacion'))
+        <div class="bg-green-500 text-white p-4 rounded mb-4">
+            {{session('Creacion')}}
+        </div>
+    @endif
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
