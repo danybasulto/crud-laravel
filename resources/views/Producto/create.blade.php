@@ -6,48 +6,96 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nuevo Producto</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert -->
 </head>
 
-<body class="h-screen flex items-center justify-center">
-    <form class="max-w-sm mx-auto" action="{{ route('productos.store') }}" method="POST">
-        @csrf
-        <div class="mb-5">
-            <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del
-                Producto</label>
-            <input type="text" id="nombre" name="nombre"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Producto" value="{{ old('nombre')}}" />
-            @error('nombre')
-                <p class="text-red-500 text-sn nt-1">{{ $message }}</p>
-            @enderror
-        </div>
-        <div class="mb-5">
-            <label for="precio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio</label>
-            <input type="decimal" id="precio" name="precio"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="10.00" value="{{ old('precio') }}" />
-                @error('precio')
-                    <p class="text-red-500 text-sn nt-1">{{ $message }}</p>
+<body class="bg-gray-50 h-screen flex items-center justify-center">
+
+    <div class="absolute top-6 right-6 px-4 py-2">
+        <a href="{{ route('productos.index') }}"
+            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-200">
+            <i class="fas fa-arrow-left"></i> Regresar
+        </a>
+    </div>
+
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Agregar Nuevo Producto</h2>
+
+        <!-- Verifica si hay un mensaje de éxito desde el controlador -->
+        @if(session('success'))
+            <script>
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+            </script>
+        @endif
+
+        <!-- Formulario de Producto -->
+        <form action="{{ route('productos.store') }}" method="POST">
+            @csrf
+
+            <!-- Nombre del Producto -->
+            <div class="mb-5">
+                <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Nombre del
+                    Producto</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Nombre del producto"
+                    class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    value="{{ old('nombre') }}" />
+                @error('nombre')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
-        </div>
+            </div>
 
-        <div class="mb-5">
-            <label for="id_categoria"
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
-            <select id="id_categoria" name="id_categoria"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                @foreach ($categorias as $categoria)
-                    <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
-                @endforeach
-            </select>
-            @error('id_categoria')
-                <p class="text-red-500 text-sn nt-1">{{ $message }}</p>
-            @enderror
-        </div>
+            <!-- Precio -->
+            <div class="mb-5">
+                <label for="precio"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Precio</label>
+                <input type="number" step="0.01" id="precio" name="precio" placeholder="10.00"
+                    class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    value="{{ old('precio') }}" />
+                @error('precio')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <button type="submit"
-            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
-    </form>
+            <!-- Categoría -->
+            <div class="mb-5">
+                <label for="id_categoria"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-500">Categoría</label>
+                <select id="id_categoria" name="id_categoria"
+                    class="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    @foreach ($categorias as $categoria)
+                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                    @endforeach
+                </select>
+                @error('id_categoria')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Botón de Enviar -->
+            <button type="submit"
+                class="w-full bg-blue-600 text-white font-semibold py-3 px-5 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition duration-200">
+                Agregar Producto
+            </button>
+        </form>
+    </div>
+
+    <!-- Script para Mostrar Mensaje de Error con SweetAlert si hay errores en el formulario -->
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                title: '¡Algo salió mal!',
+                text: 'Por favor, revisa los campos del formulario.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>
